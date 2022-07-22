@@ -3,6 +3,10 @@ app.component('product-display', {
     premium: {
       type: Boolean,
       required: true
+    },
+    cart: {
+      type: Array,
+      required: true
     }
   },
   template: 
@@ -39,8 +43,8 @@ app.component('product-display', {
         </button>
         <button 
           class="button"
-          :class="{ disabledButton: cart === 0}" 
-          :disabled="cart === 0"
+          :class="{ disabledButton: !cart.includes(variants[selectedVariant].id)}" 
+          :disabled="!cart.includes(variants[selectedVariant].id)"
           @click="removeFromCart"
         >
           Remove Cart
@@ -59,21 +63,24 @@ app.component('product-display', {
       details: ['50% cotton', '30% wool', '20% polyester'],
       variants: [
         { id: 2234, color: 'green', image: './assets/images/socks_green.jpg', quantity: 50 },
-        { id: 2235, color: 'blue', image: './assets/images/socks_blue.jpg', quantity: 0 },
+        { id: 2235, color: 'blue', image: './assets/images/socks_blue.jpg', quantity: 11 },
       ]
     }
   },
   methods: {
     addToCart() {
       if (this.inventory >= 1) {
-        this.cart += 1;
+        this.$emit('update-cart', this.variants[this.selectedVariant].id, 'add');
         this.variants[this.selectedVariant].quantity -= 1;
       }
     },
     removeFromCart() {
-      if (this.cart >= 1) {
-        this.cart -= 1;
-        this.variants[this.selectedVariant].quantity += 1;
+      if (this.cart.length >= 1) {
+        if (this.cart.includes(this.variants[this.selectedVariant].id)) {
+          this.variants[this.selectedVariant].quantity += 1;
+        }
+        
+        this.$emit('update-cart', this.variants[this.selectedVariant].id, 'remove');
       }
     },
     updateVariant(index) {
