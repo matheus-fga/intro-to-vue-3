@@ -6,6 +6,7 @@ const app = Vue.createApp({
         description: 'Soft cotton socks',
       },
       image: './assets/images/socks_green.jpg',
+      inventory: 100,
     }
   }
 })
