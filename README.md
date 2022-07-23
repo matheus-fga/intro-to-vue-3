@@ -1,0 +1,1 @@
+A simple Vue product page that lets you add products to a cart and write a review for them.
